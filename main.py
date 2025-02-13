@@ -31,9 +31,9 @@ async def go(ctx):
             embed.set_image(url=image_url)  # Setting up the Pokémon's image
             await ctx.send(embed=embed)  # Sending an embedded message with an image
         else:
-            await ctx.send("Failed to upload an image of the pokémon.")
+            await ctx.send("Gagal mengunggah gambar pokémon.")
     else:
-        await ctx.send("You've already created your own Pokémon.")  # A message that is printed whether a Pokémon has already been created
+        await ctx.send("Anda telah membuat Pokémon Anda sendiri.")  # A message that is printed whether a Pokémon has already been created
 
 @bot.command()
 async def stats(ctx):
@@ -44,7 +44,18 @@ async def stats(ctx):
         await stat.fetch_stats()
         await ctx.send(stat.show_stats())  # Kirim status Pokémon ke Discord
     else:
-        await ctx.send("You don't have a Pokémon yet! Use /go to create one.")
+        await ctx.send("Anda belum memiliki Pokemon! Gunakan /go untuk membuatnya.")
+
+@bot.command()
+async def moves(ctx):
+    author = ctx.author.name
+
+    if author in Pokemon.pokemons:
+        move = Pokemon.pokemons[author]
+        await move.fetch_moves()
+        await ctx.send(move.show_moves())
+    else:
+        await ctx.send("Anda belum memiliki Pokemon! Gunakan /go untuk membuatnya.")
 
 # Running the bot
 bot.run(token)
