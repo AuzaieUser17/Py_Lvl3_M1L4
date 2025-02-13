@@ -10,14 +10,14 @@ intents.message_content = True       # Allowing the bot to read message content
 intents.guilds = True                # Allowing the bot to work with servers (guilds)
 
 # Creating a bot with a defined command prefix and activated intents
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='/', intents=intents)
 
 # An event that is triggered when the bot is ready to run
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user.name}')  # Outputs the bot's name to the console
 
-# The '!go' command
+# The '/go' command
 @bot.command()
 async def go(ctx):
     author = ctx.author.name  # Getting the name of the message's author
@@ -34,5 +34,17 @@ async def go(ctx):
             await ctx.send("Failed to upload an image of the pokémon.")
     else:
         await ctx.send("You've already created your own Pokémon.")  # A message that is printed whether a Pokémon has already been created
+
+@bot.command()
+async def stats(ctx):
+    author = ctx.author.name
+
+    if author in Pokemon.pokemons:
+        stat = Pokemon.pokemons[author]  # Ambil objek Pokémon pengguna
+        await stat.fetch_stats()
+        await ctx.send(stat.show_stats())  # Kirim status Pokémon ke Discord
+    else:
+        await ctx.send("You don't have a Pokémon yet! Use /go to create one.")
+
 # Running the bot
 bot.run(token)
